@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Sentiment Analysis Tool {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <h1> Hi {{ user.username }}! Welcome to Sentiment Analysis Tool!! </h1>
+
+  <p>
+    <a href="{% url 'logout' %}">--> logout       </a>
+    <a href="/retrain/">--> re-train</a>
+  </p>
+{% else %}
+  You are not logged in. <a href="{% url 'login' %}">Please login</a>
+  <h1> Hi Guest! Welcome to Sentiment Analysis Tool!! </h1>
+{% endif %}
+
+Please enter a sentence, our analyser will try to detect the sentiment <br>
+Once detected, please review it and provide your opinion about the sentiment   <br> <br>
+<form action="/add/" method = "post">{% csrf_token %}
+    <input type="text" name="content">
+    <input type="submit" value="Get Sentiment">
+</form> 
+<br> <br>
+
+
+
+<table border="1">
+    <tr>
+      <th>Sentence</th>
+      <th>Predicted sentiment, Confidence</th>
+      <th>Your opinion</th>
+    </tr>
+    {% for i in all_sentences %}
+    <tr>
+      <td>{{i.sentence}}</td>
+      <td>
+        {% if i.detected_sentiment == "p" %}
+        Positive
+        {% endif %}
+        {% if i.detected_sentiment == "n" %}
+        Negative
+        {% endif %}
+        {% if i.detected_sentiment == "u" %}
+        Neutral
+        {% endif %}
+        ,  {{i.confidence}}
+      </td>
+      <td>
+        <form action="/updatesenti/{{i.id}}/" method="POST" > {% csrf_token %}
+          <input type="radio" id="p" name="senti{{i.id}}" value="p"
+              {% if i.manual_sentiment == "p" %}  checked  {% endif %} >      
+          <label for="pos">Postive</label>
+          
+          <input type="radio" id="n" name="senti{{i.id}}" value="n"
+          {% if i.manual_sentiment == "n" %}  checked  {% endif %} >
+          <label for="neg">Negative</label>
+
+          <input type="radio" id="u" name="senti{{i.id}}" value="u"
+          {% if i.manual_sentiment == "u" %}  checked  {% endif %} >
+          <label for="neu">Neutral</label>
+          <input type ="submit" value ="Update">
+        </form>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}    

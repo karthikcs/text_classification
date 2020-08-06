@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <title>Upload the file</title> 
+</head> 
+<body> 
+    <h1> Softtek Smart Categorization Tool </h1> 
+    The tool predicts the SAP Module given the description of the ticket. <br><br>
+
+    If you have a list of descriptions to be categorised, please use Option 1 to upload the file. <br>
+    If you want to test the tool, use Option 2 to provide a single description. <br>
+    <hr>
+    <b>Option 1</b> <br>
+    Upload a file with short descriptions of SAP tickets 
+    <small>
+        <ul>
+            <li>Simple Text format</li>
+            <li>Each line should contain one description</li>
+            <li>The tool will download the output file automatically, please allow the browser to download</li>
+        </ul>
+    </small>
+    <form method = "post"  enctype="multipart/form-data"> 
+        {% csrf_token %} 
+        {{ form.as_p }} 
+        <button type="submit">Upload</button> 
+    </form> 
+
+    <hr>
+    <br> 
+    <b>Option 2</b> <br>
+    Provide a single ticket description and see which category it belongs to <br> 
+    <form method = "post" enctype="multipart/form-data"> 
+        {% csrf_token %} 
+        {{ desc_form.as_p }}
+        <button type="submit">Get Category</button> 
+    </form>
+    <br> 
+    Predicted labels: {{ predicted }} <br>
+
+    <hr>
+    <small>
+        Disclaimer: Smart Categorization tool is based on Machine Learning and it is still evolving. This should not be used for any commercial nor for production use yet. <br>
+        As you might know, more the data we have the accuracy of the model increases. <br>
+        If you like to improve the model, please send the description and the corresponding labels (Module, Sub Category) to karthik.sunil@softtek com
+    </small>
+
+
+
+
+</body> 
+</html> 
